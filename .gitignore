@@ -4,3 +4,4 @@
 /src/.env
 package-lock.json
 .data/
+scanner/Cargo.lock
