@@ -1,19 +1,22 @@
-use std::io::Error;
-
 #[cfg(windows)]
 extern crate scanner;
 
-#[cfg(windows)]
-use scanner::utils::ProcessInformationIterator;
+use std::io::Error;
+
+use sysinfo::{PidExt, ProcessExt, System, SystemExt};
 
 #[cfg(windows)]
-fn print_message() -> Result<i32, Error> {
+use crate::rds::save_process_cache;
 
-    // let mut pi = ProcessInformationIterator::new().into_iter();
-    for process_information in ProcessInformationIterator::new() {
-        println!("{}: {}", process_information.pid, process_information.name);
-    }
+mod rds;
 
+#[cfg(windows)]
+fn cache_all() -> Result<i32, Error> {
+    let s = System::new_all();
+    let all = s.processes();
+    all.iter().for_each(
+        |proc| save_process_cache(proc.1.pid().as_u32(), proc.1.name().to_string()).unwrap()
+    );
     Ok(0)
 }
 
@@ -24,5 +27,5 @@ fn print_message() -> Result<(), Error> {
 }
 
 fn main() {
-    print_message().unwrap();
+    cache_all().unwrap();
 }
