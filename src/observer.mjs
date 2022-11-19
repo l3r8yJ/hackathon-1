@@ -13,20 +13,26 @@ export class Observer extends EventEmitter {
     console.log(
         `[${new Date().toLocaleString()}] Watching for folder changes on: ${this.folder}`
     )
-    const watcher = watch(this.folder, { persistent: true })
+    const watcher = watch(this.folder, {persistent: true})
     watcher.on('add', async path => {
       if (path.includes('.log')) {
-        allCached().then(
-            ids => ids.forEach(ids => {
-              this.bot.telegram.sendMessage(
-                  ids,
-                  'Log was added!'
-              )
-            })
-        ).catch(
-            err => console.error(err)
-        )
+        this.#notifyAllUsers();
       }
     })
+  }
+
+  #notifyAllUsers() {
+    allCached().then(
+        ids => ids.forEach(
+            id => {
+              this.bot.telegram.sendMessage(
+                  id,
+                  'Log was added!'
+              ).then()
+            }
+        )
+    ).catch(
+        err => console.error(err)
+    )
   }
 }
