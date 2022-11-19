@@ -6,3 +6,4 @@ package-lock.json
 .data/
 scanner/Cargo.lock
 scanner/target
+dump.rdb
