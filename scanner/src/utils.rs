@@ -1,8 +1,8 @@
 extern crate winapi;
 
-use utils::winapi::um::tlhelp32::{Process32First, Process32Next, LPPROCESSENTRY32, CreateToolhelp32Snapshot, TH32CS_SNAPPROCESS, PROCESSENTRY32};
-use utils::winapi::um::winnt::HANDLE;
-use utils::winapi::um::handleapi::INVALID_HANDLE_VALUE;
+use winapi::um::tlhelp32::{Process32First, Process32Next, LPPROCESSENTRY32, CreateToolhelp32Snapshot, TH32CS_SNAPPROCESS, PROCESSENTRY32};
+use winapi::um::winnt::HANDLE;
+use winapi::um::handleapi::INVALID_HANDLE_VALUE;
 
 pub struct ProcessInformation {
     pub pid: u32,
