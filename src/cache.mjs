@@ -1,4 +1,4 @@
-import Redis from 'ioredis'
+import Redis from 'ioredis';
 
 function client() {
   return new Redis({
@@ -6,7 +6,6 @@ function client() {
     port: process.env.REDDIS_PORT,
   });
 }
-
 export const toCache = async (name, id) => {
   client().set(id, name).then(
       () => console.log("cached: %d\n", id)
