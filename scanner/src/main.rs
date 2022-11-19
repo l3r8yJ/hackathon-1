@@ -1,14 +1,17 @@
 #[cfg(windows)]
 extern crate scanner;
 
+use std::{thread, time};
 use std::io::Error;
 
-use sysinfo::{PidExt, ProcessExt, System, SystemExt};
+use sysinfo::{CpuExt, CpuRefreshKind, PidExt, ProcessExt, RefreshKind, System, SystemExt};
 
 use proc_entity::ProcessEntity;
 
+use crate::proc_entity::SystemEntity;
 #[cfg(windows)]
 use crate::rds::cache_single_proc;
+use crate::rds::cache_system_usage;
 
 mod rds;
 mod proc_entity;
@@ -26,10 +29,34 @@ fn cache_all() -> Result<i32, Error> {
             status: proc.1.status().to_string(),
             start_time: proc.1.start_time(),
             run_time: proc.1.run_time(),
-            cpu_usage: proc.1.cpu_usage(),
+            cpu_usage: proc.1.cpu_usage()
         }
     ).for_each(|ent| cache_single_proc(&ent).unwrap());
     Ok(0)
+}
+
+#[cfg(windows)]
+fn get_global_system_usage() -> Result<i32, Error> {
+    let s = System::new_all();
+    ent = SystemEntity {
+        global_cpu_usage: get_cpu_info(),
+        global_mem: s.used_memory()
+    };
+    cache_system_usage(ent).unwrap();
+    Ok(0)
+}
+
+#[cfg(windows)]
+fn get_cpu_info() -> f32 {
+    let mut sys = System::new_with_specifics(
+        RefreshKind::new().with_cpu(CpuRefreshKind::everything()),
+    );
+    let two_hundred_millis = time::Duration::from_millis(200);
+    thread::sleep(two_hundred_millis);
+    sys.refresh_cpu();
+    thread::sleep(two_hundred_millis);
+    sys.refresh_cpu();
+    return sys.global_cpu_info().cpu_usage();
 }
 
 #[cfg(not(windows))]

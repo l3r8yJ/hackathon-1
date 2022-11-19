@@ -11,3 +11,8 @@ pub struct ProcessEntity {
     pub run_time: u64,
     pub cpu_usage: f32
 }
+
+pub struct SystemEntity {
+    pub global_cpu_usage: f32,
+    pub global_mem: u64
+}
