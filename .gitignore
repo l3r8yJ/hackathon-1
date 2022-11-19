@@ -1,5 +1,6 @@
 # Project exclude paths
 /node_modules/
 .idea
-/bot/.env
+/src/.env
 package-lock.json
+.data/
