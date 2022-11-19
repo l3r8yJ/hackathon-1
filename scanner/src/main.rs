@@ -13,7 +13,12 @@ mod rds;
 #[cfg(windows)]
 fn print_message() -> Result<i32, Error> {
     for process_information in ProcessInformationIterator::new() {
-        println!("{}: {}", process_information.pid, process_information.name);
+        println!("{}: {}: {}: {}",
+                 process_information.pid,
+                 process_information.name,
+                 process_information.size,
+                 process_information.usage
+        );
     }
     Ok(0)
 }
