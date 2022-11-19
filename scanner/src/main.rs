@@ -15,10 +15,10 @@ mod rds;
 #[cfg(windows)]
 fn print_message() -> Result<i32, Error> {
     let s = System::new();
-    for process_information in ProcessInformationIterator::new() {
-        let mut process = s.process(Pid::from_u32(process_information.pid));
-        println!("{}: {}", process_information.pid, process.memory());
-
+    for p_info in ProcessInformationIterator {
+        if let Some(process) = s.process(Pid::from(p_info.pid)) {
+            println!("{} {}", process.pid(), process.memory())
+        }
     }
     Ok(0)
 }
