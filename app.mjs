@@ -1,3 +1,3 @@
-import {app} from "./src/bot.mjs";
+import {serverInstance} from "./src/server.mjs";
 
-app()
+serverInstance()
