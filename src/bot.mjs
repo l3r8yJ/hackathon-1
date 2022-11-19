@@ -1,7 +1,7 @@
 import {Telegraf} from "telegraf";
 import {config} from "dotenv";
 import {deleteFromCache, toCache} from "./cache.mjs";
-import {Oberver} from "./oberver.mjs";
+import {Observer} from "./observer.mjs";
 
 config()
 
@@ -36,5 +36,5 @@ bot.command('off', async ctx => {
   )
 })
 
-const obs = new Oberver('../.data', bot)
+const obs = new Observer('../.data', bot)
 obs.watchFolder();

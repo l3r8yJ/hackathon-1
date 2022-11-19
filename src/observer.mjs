@@ -2,7 +2,7 @@ import {watch} from "chokidar";
 import {EventEmitter} from "events";
 import {allCached} from "./cache.mjs";
 
-export class Oberver extends EventEmitter {
+export class Observer extends EventEmitter {
   constructor(folder, bot) {
     super();
     this.folder = folder
