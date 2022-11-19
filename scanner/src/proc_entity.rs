@@ -12,6 +12,7 @@ pub struct ProcessEntity {
     pub cpu_usage: f32
 }
 
+#[derive(Debug,  Serialize, Deserialize)]
 pub struct SystemEntity {
     pub global_cpu_usage: f32,
     pub global_mem: u64

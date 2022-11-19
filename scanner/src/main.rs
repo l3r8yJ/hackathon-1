@@ -38,11 +38,11 @@ fn cache_all() -> Result<i32, Error> {
 #[cfg(windows)]
 fn get_global_system_usage() -> Result<i32, Error> {
     let s = System::new_all();
-    ent = SystemEntity {
+    let ent = SystemEntity {
         global_cpu_usage: get_cpu_info(),
         global_mem: s.used_memory()
     };
-    cache_system_usage(ent).unwrap();
+    cache_system_usage(&ent).unwrap();
     Ok(0)
 }
 
@@ -51,7 +51,7 @@ fn get_cpu_info() -> f32 {
     let mut sys = System::new_with_specifics(
         RefreshKind::new().with_cpu(CpuRefreshKind::everything()),
     );
-    let two_hundred_millis = time::Duration::from_millis(200);
+    let two_hundred_millis = time::Duration::from_millis(205);
     thread::sleep(two_hundred_millis);
     sys.refresh_cpu();
     thread::sleep(two_hundred_millis);
@@ -66,5 +66,6 @@ fn print_message() -> Result<(), Error> {
 }
 
 fn main() {
+    get_global_system_usage().unwrap();
     cache_all().unwrap();
 }
