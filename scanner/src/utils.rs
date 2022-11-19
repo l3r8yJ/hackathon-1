@@ -21,10 +21,6 @@ pub struct ProcessInformationIterator {
     process_entry: PROCESSENTRY32,
 }
 
-// fn char_arr_to_string(chars  : &[i8]) -> String {
-//     chars.into_iter().map(|c| { *c as u8 as char }).collect()
-// }
-
 impl ProcessInformationIterator {
     pub fn new() -> ProcessInformationIterator {
         let h_process_snapshot: HANDLE = unsafe {

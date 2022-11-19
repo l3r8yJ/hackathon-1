@@ -3,23 +3,20 @@ extern crate scanner;
 
 use std::io::Error;
 
-use sysinfo::{Pid, PidExt, ProcessExt, System, SystemExt};
+use sysinfo::{PidExt, ProcessExt, System, SystemExt};
 
 #[cfg(windows)]
-use scanner::utils::ProcessInformationIterator;
-
 use crate::rds::save_process_cache;
 
 mod rds;
 
 #[cfg(windows)]
-fn print_message() -> Result<i32, Error> {
-    let s = System::new();
-    for p_info in ProcessInformationIterator {
-        if let Some(process) = s.process(Pid::from(p_info.pid)) {
-            println!("{} {}", process.pid(), process.memory())
-        }
-    }
+fn cache_all() -> Result<i32, Error> {
+    let s = System::new_all();
+    let all = s.processes();
+    all.iter().for_each(
+        |proc| save_process_cache(proc.1.pid().as_u32(), proc.1.name().to_string()).unwrap()
+    );
     Ok(0)
 }
 
@@ -30,6 +27,5 @@ fn print_message() -> Result<(), Error> {
 }
 
 fn main() {
-    print_message().unwrap();
-    save_process_cache(324123, String::from("SomeStr")).expect("Error");
+    cache_all().unwrap();
 }
