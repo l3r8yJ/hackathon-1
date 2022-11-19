@@ -68,7 +68,7 @@ impl Iterator for ProcessInformationIterator {
         let lppe = &mut pe;
         let res;
         unsafe {
-            (*lppe).szExeFile = ::std::mem::zeroed();
+            (*lppe).szExeFile = std::mem::zeroed();
             res = Process32Next(self.process_snapshot, lppe);
         }
         if res != 1 { // No more processes, finish the iteration

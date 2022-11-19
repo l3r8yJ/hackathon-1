@@ -36,6 +36,6 @@ export const app = () => {
   )
   .catch(err => console.error(err))
   commands(bot);
-  const obs = new Observer('../.data', bot)
+  const obs = new Observer('./.data', bot)
   obs.watchFolder();
 }
