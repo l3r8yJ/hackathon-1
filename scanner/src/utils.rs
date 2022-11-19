@@ -20,7 +20,6 @@ pub struct ProcessInformationIterator {
     index: usize,
     process_snapshot: HANDLE,
     process_entry: PROCESSENTRY32,
-
 }
 
 fn char_arr_to_string(chars  : &[i8]) -> String {
@@ -49,13 +48,17 @@ impl ProcessInformationIterator {
         }
         let pid: u32 = pe.th32ProcessID;
         let process_name: String = char_arr_to_string(&pe.szExeFile);
-        ProcessInformationIterator { process_information: ProcessInformation::new(pid, process_name), index: 0, process_snapshot: h_process_snapshot, process_entry: pe }
+        ProcessInformationIterator {
+            process_information: ProcessInformation::new(pid, process_name),
+            index: 0,
+            process_snapshot: h_process_snapshot,
+            process_entry: pe
+        }
     }
 }
 
 impl Iterator for ProcessInformationIterator {
     type Item = ProcessInformation;
-
     fn next(&mut self) -> Option<<Self as Iterator>::Item> {
         self.index = self.index + 1;
         if self.index == 1 {
