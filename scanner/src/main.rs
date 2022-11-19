@@ -1,9 +1,9 @@
 mod rds;
+use std::io::Error;
 
 #[cfg(windows)]
 extern crate scanner;
 
-use std::error::Error;
 #[cfg(windows)]
 use scanner::utils::ProcessInformationIterator;
 
@@ -16,7 +16,7 @@ fn print_message() -> Result<i32, Error> {
 }
 
 #[cfg(not(windows))]
-fn print_message() -> Result<(), E> {
+fn print_message() -> Result<(), Error> {
     println!("Only works on Windows");
     Ok(())
 }
