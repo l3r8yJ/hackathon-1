@@ -12,7 +12,7 @@ fn save_process_cache(pid: u32, name: String) -> redis::RedisResult<()> {
 #[cfg(test)]
 mod tests {
     use crate::rds::save_process_cache;
-    fn save_p_test() {
+    fn test_save_process_success() {
         assert_eq!(
             save_process_cache(324123, String.from("SomeStr")),
             Ok(())
