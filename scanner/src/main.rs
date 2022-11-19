@@ -1,11 +1,14 @@
-mod rds;
-use std::io::Error;
-
 #[cfg(windows)]
 extern crate scanner;
 
+use std::io::Error;
+
 #[cfg(windows)]
 use scanner::utils::ProcessInformationIterator;
+
+use crate::rds::save_process_cache;
+
+mod rds;
 
 #[cfg(windows)]
 fn print_message() -> Result<i32, Error> {
@@ -23,4 +26,5 @@ fn print_message() -> Result<(), Error> {
 
 fn main() {
     print_message().unwrap();
+    save_process_cache(324123, String::from("SomeStr")).expect("Error");
 }

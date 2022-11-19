@@ -9,7 +9,3 @@ edition = "2021"
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3.9", features = ["debug", "winuser", "tlhelp32", "handleapi"] }
 redis = "0.22.1"
-
-[target.'cfg(test)'.dependencies]
-winapi = { version = "0.3.9", features = ["debug", "winuser", "tlhelp32", "handleapi"] }
-redis = "0.22.1"
