@@ -3,7 +3,7 @@ extern crate redis;
 use dotenv::dotenv;
 use redis::Commands;
 
-pub(crate) fn save_process_cache(pid: u32, name: String) -> redis::RedisResult<()> {
+pub(crate) fn cache_single_proc(proc: json::object) -> redis::RedisResult<()> {
     dotenv().ok();
     dotenv::from_filename("../../.env").ok();
     let url = dotenv::var("REDIS_URL").unwrap();
