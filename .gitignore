@@ -1,7 +1,7 @@
 # Project exclude paths
 /node_modules/
 .idea
-/src/.env
+/.env
 package-lock.json
 .data/
 scanner/Cargo.lock
