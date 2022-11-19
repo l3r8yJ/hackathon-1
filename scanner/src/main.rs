@@ -16,7 +16,7 @@ fn print_message() -> Result<i32, Error> {
 }
 
 #[cfg(not(windows))]
-fn print_message() -> Result<(), dyn Error> {
+fn print_message() -> Result<(), E> {
     println!("Only works on Windows");
     Ok(())
 }
