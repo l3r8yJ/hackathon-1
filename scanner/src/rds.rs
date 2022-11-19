@@ -1,7 +1,5 @@
 extern crate redis;
 
-use std::env;
-
 use dotenv::dotenv;
 use redis::Commands;
 

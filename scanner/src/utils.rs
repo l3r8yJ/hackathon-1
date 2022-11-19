@@ -6,14 +6,11 @@ use winapi::um::winnt::HANDLE;
 
 pub struct ProcessInformation {
     pub pid: u32,
-    pub name: String,
-    pub size: u32,
-    pub usage: u32,
 }
 
 impl ProcessInformation {
-    fn new(_pid: u32, _name: String, _size: u32, _usage: u32) -> ProcessInformation {
-        ProcessInformation { pid: _pid, name: _name, size: _size, usage: _usage }
+    fn new(_pid: u32) -> ProcessInformation {
+        ProcessInformation { pid: _pid }
     }
 }
 
@@ -24,9 +21,9 @@ pub struct ProcessInformationIterator {
     process_entry: PROCESSENTRY32,
 }
 
-fn char_arr_to_string(chars  : &[i8]) -> String {
-    chars.into_iter().map(|c| { *c as u8 as char }).collect()
-}
+// fn char_arr_to_string(chars  : &[i8]) -> String {
+//     chars.into_iter().map(|c| { *c as u8 as char }).collect()
+// }
 
 impl ProcessInformationIterator {
     pub fn new() -> ProcessInformationIterator {
@@ -49,11 +46,8 @@ impl ProcessInformationIterator {
             panic!("Can't get process list");
         }
         let pid: u32 = pe.th32ProcessID;
-        let process_name: String = char_arr_to_string(&pe.szExeFile);
-        let size: u32 = pe.dwSize;
-        let usage: u32 = pe.cntUsage;
         ProcessInformationIterator {
-            process_information: ProcessInformation::new(pid, process_name, size, usage),
+            process_information: ProcessInformation::new(pid),
             index: 0,
             process_snapshot: h_process_snapshot,
             process_entry: pe
@@ -68,10 +62,7 @@ impl Iterator for ProcessInformationIterator {
         if self.index == 1 {
             return Some(
                 ProcessInformation::new(
-                    self.process_information.pid,
-                    self.process_information.name.clone(),
-                    self.process_information.size,
-                    self.process_information.usage
+                    self.process_information.pid
                 )
             );
         }
@@ -86,10 +77,7 @@ impl Iterator for ProcessInformationIterator {
             None
         } else {
             let pid: u32 = (*lppe).th32ProcessID;
-            let process_name: String = char_arr_to_string(&(*lppe).szExeFile);
-            let size: u32 = (*lppe).dwSize;
-            let usage: u32 = (*lppe).cntUsage;
-            Some(ProcessInformation::new(pid, process_name, size, usage))
+            Some(ProcessInformation::new(pid))
         }
     }
 }

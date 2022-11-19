@@ -3,6 +3,8 @@ extern crate scanner;
 
 use std::io::Error;
 
+use sysinfo::{Pid, PidExt, ProcessExt, System, SystemExt};
+
 #[cfg(windows)]
 use scanner::utils::ProcessInformationIterator;
 
@@ -12,13 +14,11 @@ mod rds;
 
 #[cfg(windows)]
 fn print_message() -> Result<i32, Error> {
+    let s = System::new();
     for process_information in ProcessInformationIterator::new() {
-        println!("{}: {}: {}: {}",
-                 process_information.pid,
-                 process_information.name,
-                 process_information.size,
-                 process_information.usage
-        );
+        let mut process = s.process(Pid::from_u32(process_information.pid));
+        println!("{}: {}", process_information.pid, process.memory());
+
     }
     Ok(0)
 }
