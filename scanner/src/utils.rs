@@ -20,7 +20,6 @@ pub struct ProcessInformationIterator {
     index: usize,
     process_snapshot: HANDLE,
     process_entry: PROCESSENTRY32,
-
 }
 
 fn char_arr_to_string(chars  : &[i8]) -> String {
@@ -38,32 +37,38 @@ impl ProcessInformationIterator {
         println!("Got process snapshot handle, moving on...");
         let mut pe: PROCESSENTRY32;
         unsafe {
-            pe = ::std::mem::zeroed();
+            pe = std::mem::zeroed();
         }
-        let a = ::std::mem::size_of::<PROCESSENTRY32>();
-
+        let a = std::mem::size_of::<PROCESSENTRY32>();
         let lppe: LPPROCESSENTRY32 = &mut pe;
         pe.dwSize = a as u32;
         let res = unsafe { Process32First(h_process_snapshot, lppe) };
         if res == 0 {
             panic!("Can't get process list");
         }
-
         let pid: u32 = pe.th32ProcessID;
         let process_name: String = char_arr_to_string(&pe.szExeFile);
-        ProcessInformationIterator { process_information: ProcessInformation::new(pid, process_name), index: 0, process_snapshot: h_process_snapshot, process_entry: pe }
+        ProcessInformationIterator {
+            process_information: ProcessInformation::new(pid, process_name),
+            index: 0,
+            process_snapshot: h_process_snapshot,
+            process_entry: pe
+        }
     }
 }
 
 impl Iterator for ProcessInformationIterator {
     type Item = ProcessInformation;
-
     fn next(&mut self) -> Option<<Self as Iterator>::Item> {
         self.index = self.index + 1;
         if self.index == 1 {
-            return Some(ProcessInformation::new(self.process_information.pid, self.process_information.name.clone()));
+            return Some(
+                ProcessInformation::new(
+                    self.process_information.pid,
+                    self.process_information.name.clone()
+                )
+            );
         }
-
         let mut pe = self.process_entry;
         let lppe = &mut pe;
         let res;
