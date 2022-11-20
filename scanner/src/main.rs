@@ -20,7 +20,7 @@ use crate::rds::cache_single_proc;
 use crate::rds::cache_system_usage;
 
 mod rds;
-mod proc_entity;
+mod ents;
 
 #[cfg(windows)]
 fn cache_all() -> Result<i32, Error> {
@@ -114,9 +114,7 @@ async fn main() -> std::io::Result<()> {
             .route("/processes", web::get().to(all_as_json))
             .route("/usage", web::get().to(system_usage_as_json))
             .wrap(cors)
-            // .service(index)
-    }
-    )
+    })
         .bind(("127.0.0.1", 8282))?
         .run()
         .await
