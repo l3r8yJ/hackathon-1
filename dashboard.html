@@ -13,6 +13,9 @@
     <meta name="robots" content="noindex,nofollow">
     <title>Monitor Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.rawgit.com/rikmms/progress-bar-4-axios/0a3acf92/dist/index.js"></script>
+<!--    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>-->
     <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/" />
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
@@ -148,7 +151,7 @@
                                             style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                                     </div>
                                 </li>
-                                <li class="ms-auto"><span class="counter text-purple">30%</span></li>
+                                <li class="ms-auto"><span id="global-mem" class="counter text-purple"></span></li>
                             </ul>
                         </div>
                     </div>
@@ -161,7 +164,7 @@
                                             style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                                     </div>
                                 </li>
-                                <li class="ms-auto"><span class="counter text-info">56%</span>
+                                <li class="ms-auto"><span id="cpu-usage" class="counter text-info"></span>
                                 </li>
                             </ul>
                         </div>
@@ -214,58 +217,12 @@
                                             <th class="border-top-0">PID</th>
                                             <th class="border-top-0">Start Time</th>
                                             <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">CPU</th>
+                                            <th class="border-top-0">Memory</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="txt-oflo">a</td>
-                                            <td>4343</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-success">neutural</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td class="txt-oflo">b</td>
-                                            <td>5454</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-info">suspected</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td class="txt-oflo">c</td>
-                                            <td>5454</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-info">suspected</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td class="txt-oflo">d</td>
-                                            <td>343</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-danger">malware</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td class="txt-oflo">e</td>
-                                            <td>344534</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-success">neutural</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td class="txt-oflo">f</td>
-                                            <td>233</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-danger">malware</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td class="txt-oflo">g</td>
-                                            <td>1023</td>
-                                            <td class="txt-oflo">19:15:11</td>
-                                            <td><span class="text-success">neutural</span></td>
-                                        </tr>
+                                    <tbody id="proc-table">
+
                                     </tbody>
                                 </table>
                             </div>

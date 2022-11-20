@@ -16,19 +16,20 @@ export const deleteFromCache = async (id) => {
   client().del(id).catch(err => console.error(err))
 }
 
-export const allCached = async () => {
+export const allCached = (req, res) => {
   let cache = []
-  let ress = "dsaa";
+  let ress;
   client().keys('*', async (err, res) => {
     if (err) {
       console.error(err)
       return
     }
-    for (const key in res) {
-      console.log(key)
-      cache.push(await client().get())
+    let counter = 0;
+    for (let key in res) {
+      if (++counter > 10) break;
+      cache.push(await client().get(key));
     }
-    console.log(cache)
+    ress = cache.filter(el => el != null);
   })
   return ress;
 }
