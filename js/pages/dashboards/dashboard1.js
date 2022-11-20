@@ -1,10 +1,15 @@
 $(function () {
     "use strict";
+    let cache;
+    const cacheRequest = async () => {
+        const response = await axios.get("http://127.0.0.1:8282/usage");
+        return response;
+    };
+    const procRequest = async () => {
+        const response = await axios.get("http://127.0.0.1:8282/processes");
+        return response;
+    };
 
-    const cache = async () => {
-        const request = await axios.get("/login");
-        // do something with the response
-      };
     var labels = [];
     var seriesCpu = [];
     var seriesMem = [];
@@ -22,7 +27,7 @@ $(function () {
         }
         if (time.hour == 24)
         {
-            hour = 0;
+            time.hour = 0;
         }
         time.sec = time.sec < 10 ? ("0" + time.sec) : time.sec;
         time.min = time.min < 10 ? ("0" + time.min) : time.min;
@@ -66,18 +71,48 @@ $(function () {
             labels.push(time.hour + ":" + time.min + ":" + time.sec);
         }
     };
-
     var updateSeries = function() {
-
+        cacheRequest().then((res)=>{
+            let data = res.data;
+            if (seriesCpu.length === 12 && seriesMem === 12)
+            {
+                seriesMem.shift();
+                seriesCpu.shift();
+            }
+            seriesCpu.push(Math.round(data.global_cpu_usage));
+            seriesMem.push(data.global_mem / (4*Math.pow(10, 9)));
+            $('#global-mem').text(Math.abs(Math.round(data.global_mem / (4*Math.pow(10, 9)))) + '%');
+            $('#cpu-usage').text(Math.round(data.global_cpu_usage)+ '%');
+        });
+        procRequest().then((res) => {
+            $('#proc-table').children('tr').remove();
+            res = res.data.split('}');
+            for (let i = 0; i < 10; i++)
+            {
+                res[i] += '}';
+                let data = JSON.parse(res[i]);
+                let date = new Date(data.start_time * 1000);
+                let hour = date.getHours() < 10 ? "0"+date.getHours() : date.getHours();
+                let min = date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes();
+                let sec = date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds();
+                date = date.getFullYear() + " " + date.getMonth() + " " + date.getDate()
+                    + " " + hour + ":" + min + ":" + sec;
+                $('#proc-table').append('<tr>' + '<td>' + (i + 1) + '</td>' + '<td class="txt-oflo">' + data.name + '</td>'
+                    + '<td>' + data.pid + '</td>' + '<td>' +  date + '</td>' + '<td>' + data.status + '</td>'
+                    + '<td>' + data.cpu_usage + '</td>' + '<td>' + data.mem / (4*Math.pow(10, 9)) + '%' + '</td>' + '</tr>');
+            }
+        })
     }
+    updateSeries();
+    setInterval(updateSeries, 5000);
 
     //ct-visits
     var createChartist = function() {
         new Chartist.Line('#ct-processes', {
                 labels: labels,
                 series: [
-                    [0, 10, 26, 25, 44, 10, 34, 12, 10, 26, 25, 44, 10],
-                     [0, 13, 37, 42, 67, 23, 74, 45, 20, 56, 35, 64, 23]
+                    seriesMem,
+                    seriesCpu
                 ]
             }, {
                 top: 0,
@@ -89,7 +124,7 @@ $(function () {
                 ],
                 axisY: {
                     labelInterpolationFnc: function (value) {
-                        return (value / 1) + '%';
+                        return value + '%';
                     }
                 },
                 showArea: true
@@ -99,7 +134,7 @@ $(function () {
     var chart = [chart];
 
     var sparklineLogin = function () {
-        $('#sparklinedash').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
+        $('#sparklinedash').sparkline([1], {
             type: 'bar',
             height: '30',
             barWidth: '4',
@@ -107,7 +142,7 @@ $(function () {
             barSpacing: '5',
             barColor: '#7ace4c'
         });
-        $('#sparklinedash2').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
+        $('#sparklinedash2').sparkline(seriesMem, {
             type: 'bar',
             height: '30',
             barWidth: '4',
@@ -115,7 +150,7 @@ $(function () {
             barSpacing: '5',
             barColor: '#7460ee'
         });
-        $('#sparklinedash3').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
+        $('#sparklinedash3').sparkline(seriesCpu, {
             type: 'bar',
             height: '30',
             barWidth: '4',
